@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ info.name }} - Detalles del Pokémon</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static '../static/styles/detail.css' %}"
+    />
+</head>
+<body>
+    <header>
+        <h1>{{ info.name }} - Detalles del Pokémon</h1>
+    </header>
+
+    <img src="{{ image }}" alt="{{ info.name }}">
+    
+    <h2>Información Básica:</h2>
+    <ul>
+        <li>Número de Pokémon: {{ info.id }}</li>
+        <li>Altura: {{ info.height }}</li>
+        <li>Peso: {{ info.weight }}</li>
+    </ul>
+
+    <h2>Habilidades:</h2>
+    <ul>
+        {% for ability in abilities %}
+            <li>{{ ability }}</li>
+        {% endfor %}
+    </ul>
+    <a class="back-link" href="{% url 'pokemon_list' %}">Volver a la lista de Pokémones</a>
+</body>
+</html>

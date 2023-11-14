@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokémon List</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'styles/syles.css' %}"
+    />
+  </head>
+  <body>
+    <h1>Pokémon List</h1>
+
+    <form action="#" method="GET" id="searchForm">
+      <label for="pokemonSearch">Buscar Pokémon por nombre:</label>
+      <input type="text" id="pokemonSearch" name="search_name" />
+      <button type="submit" id="searchButton">Buscar</button>
+    </form>
+
+    <ul class="pokemon-list" id="pokemonList">
+      {% for pokemon in pokemon_list %}
+      <li class="pokemon-item">
+        <a href="{% url 'pokemon_detail' name=pokemon.name %}">
+          <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}" />
+          <p>{{ pokemon.name }}</p>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <nav>
+      <ul class="pagination">
+        {% if pokemon_page.has_previous %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="?page={{ pokemon_page.previous_page_number }}"
+            aria-label="Previous"
+          >
+            &laquo; Anterior
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">&laquo; Anterior</span>
+        </li>
+        {% endif %} {% for num in pokemon_page.paginator.page_range %} {% if num
+        == pokemon_page.number %}
+        <li class="page-item active">
+          <span class="page-link">{{ num }}</span>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %} {% endfor %} {% if pokemon_page.has_next %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="?page={{ pokemon_page.next_page_number }}"
+            aria-label="Next"
+          >
+            Siguiente &raquo;
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Siguiente &raquo;</span>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    <script>
+      /**
+       * Filtra y muestra u oculta los elementos de la lista de Pokémon según el término de búsqueda.
+       */
+      document.addEventListener("DOMContentLoaded", function () {
+        /**
+         * Filtra la lista de Pokémon según el término de búsqueda.
+         * @param {Event} event - El evento de envío del formulario.
+         */
+         
+        function filterPokemon(event) {
+          event.preventDefault();
+          const searchValue = searchInput.value.toLowerCase();
+
+          pokemonList.forEach(function (pokemon) {
+            const name = pokemon.querySelector("p").textContent.toLowerCase();
+            if (name.includes(searchValue) || searchValue === "") {
+              pokemon.style.display = "block";
+            } else {
+              pokemon.style.display = "none";
+            }
+          });
+        }
+
+        const pokemonList = document.querySelectorAll(".pokemon-item");
+        const searchForm = document.getElementById("searchForm");
+        const searchInput = document.getElementById("pokemonSearch");
+
+        // Agrega un evento al formulario cuando se envía
+        searchForm.addEventListener("submit", filterPokemon);
+      });
+    </script>
+  </body>
+</html>
